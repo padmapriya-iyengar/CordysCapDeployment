@@ -21,7 +21,7 @@ import capdeployment.ant.settings.DeploymentSettings;
 import com.cordys.deployment.ant.handler.BaseHandler;
 import com.cordys.deployment.ant.tasks.BaseTask;
 
-public class ReadExcel  extends BaseHandler {
+public class ReadExcel extends BaseHandler {
 	public static String filePath = null;
 
 	public ReadExcel(String ldapRoot, DeploymentSettings settings) {
@@ -115,7 +115,7 @@ public class ReadExcel  extends BaseHandler {
 					if (null != row) {
 						cellItr = row.cellIterator();
 						while (cellItr.hasNext()) {
-							cellValue += String.valueOf(cellItr.next()) + "$$";
+							cellValue += String.valueOf(cellItr.next()) + "~~";
 						}
 						if (null != cellValue && !("").equals(cellValue)) {
 							cellValue = cellValue.substring(0,
@@ -160,7 +160,7 @@ public class ReadExcel  extends BaseHandler {
 					if (null != row) {
 						cellItr = row.cellIterator();
 						while (cellItr.hasNext()) {
-							cellValue += String.valueOf(cellItr.next()) + "$$";
+							cellValue += String.valueOf(cellItr.next()) + "~~";
 						}
 						if (null != cellValue && !("").equals(cellValue)) {
 							cellValue = cellValue.substring(0,
@@ -205,7 +205,7 @@ public class ReadExcel  extends BaseHandler {
 					if (null != row) {
 						cellItr = row.cellIterator();
 						while (cellItr.hasNext()) {
-							cellValue += String.valueOf(cellItr.next()) + "$$";
+							cellValue += String.valueOf(cellItr.next()) + "~~";
 						}
 						if (null != cellValue && !("").equals(cellValue)) {
 							cellValue = cellValue.substring(0,
@@ -250,10 +250,14 @@ public class ReadExcel  extends BaseHandler {
 					if (null != row) {
 						cellItr = row.cellIterator();
 						while (cellItr.hasNext()) {
-							cellValue = String.valueOf(cellItr.next());
-							if (null != cellValue && !("").equals(cellValue))
-								containers.add(cellValue);
+							cellValue += String.valueOf(cellItr.next()) + "~~";
 						}
+						if (null != cellValue && !("").equals(cellValue)) {
+							cellValue = cellValue.substring(0,
+									cellValue.length() - 2);
+							containers.add(cellValue);
+						}
+						cellValue = "";
 						rowValue++;
 					} else
 						break;
@@ -275,10 +279,12 @@ public class ReadExcel  extends BaseHandler {
 		try {
 			BaseTask.printMessage("Before reading the sheets");
 			excelInfo = new HashMap<String, ArrayList<String>>();
-			/*excelInfo.put("PackageDetails", readPackageDetails(wb));
-			excelInfo.put("InterfaceDetails", readInterfaceDetails(wb));
-			excelInfo.put("JREDetails", readJREDetails(wb));
-			excelInfo.put("RoleDetails", readRoleDetails(wb));*/
+			/*
+			 * excelInfo.put("PackageDetails", readPackageDetails(wb));
+			 * excelInfo.put("InterfaceDetails", readInterfaceDetails(wb));
+			 * excelInfo.put("JREDetails", readJREDetails(wb));
+			 * excelInfo.put("RoleDetails", readRoleDetails(wb));
+			 */
 			excelInfo.put("ContainerDetails", readContainerDetails(wb));
 		} catch (Exception exp) {
 			BaseTask.printMessage("Exception occured while reading the reading the sheets");

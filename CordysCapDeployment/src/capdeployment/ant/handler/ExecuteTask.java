@@ -49,22 +49,20 @@ public class ExecuteTask {
 		int counter = 0;
 		int interfaceCount = 0;
 		ArrayList<String> properties = null;
+		String[] propertyValues = null;
 		try {
 			interfaceCount = interfaceDetails.size();
 			properties = new ArrayList<String>();
-
+			propertyValues = new String[10];
 			for (counter = 0; counter < interfaceCount; counter++) {
-				properties.add("ServiceGroup-"
-						+ interfaceDetails.get(counter).split("$$")[0]);
-				properties.add("Organization-"
-						+ interfaceDetails.get(counter).split("$$")[1]);
-				properties.add("UpdateValue-"
-						+ interfaceDetails.get(counter).split("$$")[2]);
-				if (null != interfaceDetails.get(counter).split("$$")[3]
-						&& !("").equals(interfaceDetails.get(counter).split(
-								"$$")[3])
-						&& interfaceDetails.get(counter).split("$$")[3]
-								.equalsIgnoreCase("DELETE"))
+				propertyValues = interfaceDetails.get(counter).split("~~");
+				properties.add("ServiceGroup-" + propertyValues[0].trim());
+				properties.add("Organization-" + propertyValues[1].trim());
+				properties.add("UpdateValue-" + propertyValues[2].trim());
+				properties.add("InterfacePackage-" + propertyValues[4].trim());
+				if (null != propertyValues[3]
+						&& !("").equals(propertyValues[3])
+						&& propertyValues[3].trim().equalsIgnoreCase("DELETE"))
 					executeAntTask(buildFilePath, "GroupConfigDelete",
 							properties);
 				else
@@ -85,19 +83,17 @@ public class ExecuteTask {
 		int counter = 0;
 		int jreCount = 0;
 		ArrayList<String> properties = null;
+		String[] propertyValues = null;
 		try {
 			jreCount = jreDetails.size();
 			properties = new ArrayList<String>();
-
+			propertyValues = new String[10];
 			for (counter = 0; counter < jreCount; counter++) {
-				properties.add("ServiceGroup-"
-						+ jreDetails.get(counter).split("$$")[0]);
-				properties.add("ServiceContainer-"
-						+ jreDetails.get(counter).split("$$")[1]);
-				properties.add("Organization-"
-						+ jreDetails.get(counter).split("$$")[2]);
-				properties.add("UpdateValue-"
-						+ jreDetails.get(counter).split("$$")[3]);
+				propertyValues = jreDetails.get(counter).split("~~");
+				properties.add("ServiceGroup-" + propertyValues[0].trim());
+				properties.add("ServiceContainer-" + propertyValues[1].trim());
+				properties.add("Organization-" + propertyValues[2].trim());
+				properties.add("UpdateValue-" + propertyValues[3].trim());
 				executeAntTask(buildFilePath, "ContainerConfigUpdate",
 						properties);
 			}
@@ -116,19 +112,17 @@ public class ExecuteTask {
 		int counter = 0;
 		int roleCount = 0;
 		ArrayList<String> properties = null;
+		String[] propertyValues = null;
 		try {
 			roleCount = roleDetails.size();
 			properties = new ArrayList<String>();
-
+			propertyValues = new String[10];
 			for (counter = 0; counter < roleCount; counter++) {
-				properties.add("User-"
-						+ roleDetails.get(counter).split("$$")[0]);
-				properties.add("RoleName-"
-						+ roleDetails.get(counter).split("$$")[1]);
-				properties.add("Organization-"
-						+ roleDetails.get(counter).split("$$")[2]);
-				properties.add("RolePackage-"
-						+ roleDetails.get(counter).split("$$")[3]);
+				propertyValues = roleDetails.get(counter).split("~~");
+				properties.add("User-" + propertyValues[0].trim());
+				properties.add("RoleName-" + propertyValues[1].trim());
+				properties.add("Organization-" + propertyValues[2].trim());
+				properties.add("RolePackage-" + propertyValues[3].trim());
 				executeAntTask(buildFilePath, "RoleAssignment", properties);
 			}
 		} catch (Exception exp) {
@@ -146,23 +140,28 @@ public class ExecuteTask {
 		int counter = 0;
 		int containerCount = 0;
 		ArrayList<String> properties = null;
+		String[] propertyValues = null;
 		try {
+			BaseTask.printMessage("Container action method");
 			containerCount = containerDetails.size();
 			properties = new ArrayList<String>();
-
+			propertyValues = new String[10];
+			BaseTask.printMessage("Initializing properties");
+			BaseTask.printMessage("The number of rows is: " + containerCount);
 			for (counter = 0; counter < containerCount; counter++) {
-				properties.add("ServiceGroup-"
-						+ containerDetails.get(counter).split("$$")[0]);
-				properties.add("ServiceContainer-"
-						+ containerDetails.get(counter).split("$$")[1]);
-				properties.add("Organization-"
-						+ containerDetails.get(counter).split("$$")[2]);
-				properties.add("Action-"
-						+ containerDetails.get(counter).split("$$")[3]);
+				BaseTask.printMessage("Row Details: "
+						+ containerDetails.get(counter));
+				propertyValues = containerDetails.get(counter).split("~~");
+				properties.add("ServiceGroup-" + propertyValues[0].trim());
+				properties.add("ServiceContainer-" + propertyValues[1].trim());
+				properties.add("Organization-" + propertyValues[2].trim());
+				properties.add("Action-" + propertyValues[3].trim());
+
 				executeAntTask(buildFilePath, "ContainerAction", properties);
 			}
 		} catch (Exception exp) {
 			BaseTask.printMessage("Exception occured while acting on the containers");
+			exp.printStackTrace();
 			throw new DeploymentException(
 					DeploymentMessages.CONTAINER_ACTION_EXCEPTION,
 					new Object[] { exp.getMessage() });
@@ -191,10 +190,13 @@ public class ExecuteTask {
 						propertyValue.get(propertyCount).split("-")[0],
 						propertyValue.get(propertyCount).split("-")[1]);
 			}
-			BaseTask.printMessage("Service group is:"+project.getProperty("ServiceGroup"));
-			BaseTask.printMessage("Service container is:"+project.getProperty("ServiceContainer"));
-			BaseTask.printMessage("Organization is:"+project.getProperty("Organization"));
-			BaseTask.printMessage("Action is:"+project.getProperty("Action"));
+			BaseTask.printMessage("Service group is:"
+					+ project.getProperty("ServiceGroup"));
+			BaseTask.printMessage("Service container is:"
+					+ project.getProperty("ServiceContainer"));
+			BaseTask.printMessage("Organization is:"
+					+ project.getProperty("Organization"));
+			BaseTask.printMessage("Action is:" + project.getProperty("Action"));
 			project.addBuildListener(consoleLogger);
 			project.fireBuildStarted();
 			project.init();
@@ -227,13 +229,13 @@ public class ExecuteTask {
 
 	public static boolean capDeployment(
 			Map<String, ArrayList<String>> packageDetails) {
-		//boolean status = false;
+		// boolean status = false;
 		boolean deploymentResult = false;
 		try {
 			BaseTask.printMessage("Before executing all the tasks");
 			deploymentResult = restartContainer(packageDetails
 					.get("ContainerDetails"));
-			//deploymentResult = true;
+			// deploymentResult = true;
 		} catch (Exception exp) {
 			System.out.println(exp.getMessage());
 		}
