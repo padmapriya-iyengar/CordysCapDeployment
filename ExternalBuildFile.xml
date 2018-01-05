@@ -1,0 +1,22 @@
+<project name="Cordys Utilities" default="Information">
+	<property environment="env" />
+	<property name="bop.install.dir" value="${env.CORDYS_HOME}" />
+	<property name="ServiceGroup" value=""/>
+	<property name="ServiceContainer" value=""/>
+	<property name="Organization" value=""/>
+	<property name="Action" value=""/>
+	<property name="UpdateValue" value=""/>
+	<property name="InterfacePackage" value=""/>
+	<taskdef resource="com/darkhorse/taskdef.xml" classpath="${bop.install.dir}/components/anttasks/anttasks.jar:${bop.install.dir}/components/anttasks/CordysUtilities.jar" />
+	<target name="ContainerAction">
+		<echo>Starting the container action.</echo>
+		<ContainerAction ServiceGroup="${ServiceGroup}" ServiceContainer="${ServiceContainer}" Organization="${Organization}" Action="${Action}" ServiceNamespace="http://schemas.cordys.com/1.0/monitor" ldapRoot = "cn=cordys,cn=DevInst2,o=alahli.com"/>
+		<echo>Performed the container action.</echo>
+	</target>
+	<target name="GroupConfigAdd">
+		<echo>Starting the group config update action.</echo>
+		<GroupConfigUpdate ServiceGroup="${ServiceGroup}" Organization="${Organization}" UpdateParameter="INTERFACE_UPDATE" UpdateValue=${UpdateValue}"  ServiceNamespace="http://schemas.cordys.com/1.0/ldap" UpdateAction="ADD" InterfacePackage=${InterfacePackage} ldapRoot = "cn=cordys,cn=DevInst2,o=alahli.com" />
+		<echo>Performed the group config update action.</echo>
+	</target>
+	<target name="Information"><echo>Specify the action to the taken</echo></target>
+</project>
