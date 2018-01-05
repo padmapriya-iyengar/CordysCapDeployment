@@ -1,0 +1,11 @@
+<project name="MyProject" default = "Information">
+	<property environment="env" />
+	<property name="bop.install.dir" value="${env.CORDYS_HOME}" />
+	<taskdef resource="capdeployment/ant/taskdef.xml" classpath="${bop.install.dir}/components/anttasks/anttasks.jar:${bop.install.dir}/components/anttasks/CordysCapDeployment.jar:${bop.install.dir}/ext/poi-3.17.jar:${bop.install.dir}/ext/poi-ooxml-3.17.jar:${bop.install.dir}/ext/poi-ooxml-schemas-3.17.jar:${bop.install.dir}/ext/xmlbeans-2.6.0.jar:${bop.install.dir}/ext/xercesimpl-2.6.1.jar:${bop.install.dir}/ext/commons-collections4-4.1.jar" />
+	<target name="Information"><echo>Specify the action to the taken</echo></target>
+	<target name="readExcel">
+		<echo>Reading excel</echo>
+		<ReadExcel FilePath="C:\\Users\\Darkhorse\\Desktop\\ANT_Explorations\\CapDeployment.xlsx" ldapRoot = "cn=cordys,cn=defaultInst,o=dhdigital.co.in"/>
+		<echo> Reading excel</echo>
+	</target>
+</project>
